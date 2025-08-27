@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
-@NoArgsConstructor
 public class Email {
     @jakarta.validation.constraints.Email
     @Column(name = "email")
     private String value;
 
-    private Email(String value) {
+    public Email() {}
+
+    public Email(String value) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("O email é obrigatorio");
         }

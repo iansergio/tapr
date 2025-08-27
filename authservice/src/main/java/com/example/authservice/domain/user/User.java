@@ -1,6 +1,7 @@
 package com.example.authservice.domain.user;
 
 import com.example.authservice.domain.user.vo.Email;
+import com.example.authservice.domain.user.vo.Role;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.Getter;
@@ -29,4 +30,7 @@ public class User {
     @Valid
     @Embedded
     private Email email;
+
+    @Embedded
+    private Role role;
 }

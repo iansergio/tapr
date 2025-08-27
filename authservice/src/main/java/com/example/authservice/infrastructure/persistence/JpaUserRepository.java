@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-@RequiredArgsConstructor
 public class JpaUserRepository implements UserRepository {
     private final SpringDataUserJpa jpa;
 
