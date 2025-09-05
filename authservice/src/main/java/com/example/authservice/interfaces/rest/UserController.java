@@ -3,7 +3,6 @@ package com.example.authservice.interfaces.rest;
 
 import com.example.authservice.application.user.ListUsersHandler;
 import com.example.authservice.application.user.RegisterUserHandler;
-import com.example.authservice.domain.user.User;
 import com.example.authservice.interfaces.rest.dto.user.RegisterUserRequest;
 import com.example.authservice.interfaces.rest.dto.user.UserResponse;
 import jakarta.validation.Valid;

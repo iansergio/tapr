@@ -15,7 +15,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenService implements TokenService {
-    private JwtProperties props;
+    private final JwtProperties props;
 
     @Override
     public TokenPair issue(User user) {
