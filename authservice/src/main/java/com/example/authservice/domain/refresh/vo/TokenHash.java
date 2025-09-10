@@ -13,6 +13,6 @@ import lombok.Setter;
 @Setter
 public class TokenHash {
 
-    private String hash;
+    private String value;
 
 }
