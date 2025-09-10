@@ -5,6 +5,7 @@ import com.example.authservice.application.user.ListUsersHandler;
 import com.example.authservice.application.user.RegisterUserHandler;
 import com.example.authservice.interfaces.rest.dto.user.RegisterUserRequest;
 import com.example.authservice.interfaces.rest.dto.user.UserResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ public class UserController {
     private final ListUsersHandler listUsersHandler;
     private final RegisterUserHandler registerUserHandler;
 
+    @Operation(summary = "Lista os usuários cadastrados")
     @GetMapping
     public ResponseEntity<Page<UserResponse>> list(Pageable pageable) {
         Page<UserResponse> page = listUsersHandler.handle(pageable);
@@ -29,6 +31,7 @@ public class UserController {
         return ResponseEntity.ok(page);
     }
 
+    @Operation(summary = "Cadastra os usuários")
     @PostMapping
     public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterUserRequest request) {
         UserResponse created =registerUserHandler.handle(request.name(), request.email(), request.password());

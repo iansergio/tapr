@@ -3,6 +3,7 @@ package com.example.authservice.interfaces.rest;
 import com.example.authservice.application.auth.PasswordLoginHandler;
 import com.example.authservice.interfaces.rest.dto.auth.PasswordLoginRequest;
 import com.example.authservice.interfaces.rest.dto.auth.TokenResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
+
     private final PasswordLoginHandler passwordLoginHandler;
 
+    @Operation(summary = "Login e emissão de tokens")
     @PostMapping("/login/password")
     public ResponseEntity<TokenResponse> loginWithPassword(@Valid @RequestBody PasswordLoginRequest request) {
         TokenResponse response = passwordLoginHandler.handle(request.email(), request.password());
