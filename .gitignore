@@ -1,0 +1,71 @@
+### Compilação Java ###
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+### Logs e relatórios ###
+*.log
+*.out
+*.err
+hs_err_pid*
+replay_pid*
+
+### Diretórios de build ###
+/target/
+/build/
+/out/
+/dist/
+/bin/
+/generated/
+/.apt_generated/
+/.mtj.tmp/
+
+### Maven ###
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+!/.mvn/wrapper/MavenWrapperDownloader.java
+/.mvn/timing.properties
+
+### Gradle ###
+.gradle/
+/build/
+/.gradle-cache/
+/gradle-app.setting
+gradle-app.setting
+!gradle-wrapper.jar
+
+### VS Code ###
+.vscode/
+.vscode-test/
+
+### IntelliJ IDEA ###
+.idea/
+/*.iws
+*.iml
+*.ipr
+
+### Eclipse ###
+.project
+.classpath
+.settings/
+.loadpath
+
+### NetBeans ###
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### Sistema operacional ###
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.swp
+*.swo
+*~
