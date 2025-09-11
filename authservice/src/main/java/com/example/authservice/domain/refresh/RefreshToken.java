@@ -28,9 +28,9 @@ public class RefreshToken {
     @Embedded
     private ExpiresAt expiresAt;
 
-    private boolean revoked = false;
+    private boolean revoked;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

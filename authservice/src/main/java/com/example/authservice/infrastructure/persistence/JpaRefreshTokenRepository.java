@@ -7,6 +7,9 @@ import com.example.authservice.domain.refresh.vo.TokenHash;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class JpaRefreshTokenRepository implements RefreshTokenRepository {
 
     private SpringDataRefreshTokenJpa jpa;
@@ -22,15 +25,14 @@ public class JpaRefreshTokenRepository implements RefreshTokenRepository {
 
     @Override
     public Optional<RefreshToken> findActiveByHash(TokenHash tokenHash) {
-        return jpa.findByTokenHash(tokenHash)
-                .filter(token -> !token.isRevoked() && !token.getExpiresAt().isExpired());
+        return jpa.findByTokenHash(tokenHash);
     }
 
     @Override
     public void revoke(UUID id) {
-        jpa.findById(id).ifPresent(refreshToken -> {
-            refreshToken.setRevoked(true);
-            jpa.save(refreshToken);
+        jpa.findById(id).ifPresent(token -> {
+            token.setRevoked(true);
+            jpa.save(token);
         });
     }
 
@@ -38,4 +40,5 @@ public class JpaRefreshTokenRepository implements RefreshTokenRepository {
     public void deleteById(UUID id) {
         jpa.deleteById(id);
     }
+
 }
