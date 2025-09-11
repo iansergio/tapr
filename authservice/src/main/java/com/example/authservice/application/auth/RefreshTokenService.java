@@ -1,8 +1,7 @@
 package com.example.authservice.application.auth;
 
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.authservice.application.port.TokenService;
 import com.example.authservice.domain.user.User;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +12,22 @@ import com.example.authservice.domain.refresh.vo.TokenHash;
 @Service
 public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
-    private final TokenService tokenService;
 
-    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, TokenService tokenService) {
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.tokenService = tokenService;
     }
 
+    @Transactional
     public void save(RefreshToken refreshToken) {
+        User user = refreshToken.getUser();
+        if (user != null && user.getId() != null) {
+            refreshTokenRepository.findByUserId(
+                    user.getId()).ifPresent(existingToken -> refreshTokenRepository.deleteById(existingToken.getId()));
+        }
         refreshTokenRepository.save(refreshToken);
     }
 
-    public TokenService.TokenPair refreshTokens(String refreshTokenHash) {
+    public User refreshTokens(String refreshTokenHash) {
         RefreshToken refreshToken = refreshTokenRepository.findActiveByHash(new TokenHash(refreshTokenHash))
                 .filter(token -> !token.isRevoked() && !token.getExpiresAt().isExpired())
                 .orElseThrow(() -> new IllegalArgumentException("Refresh token inválido ou expirado"));
@@ -33,17 +36,7 @@ public class RefreshTokenService {
         refreshToken.setRevoked(true);
         refreshTokenRepository.save(refreshToken);
 
-        // Emite outro token
-        User user = refreshToken.getUser();
-        TokenService.TokenPair newToken = tokenService.issue(user);
-        refreshTokenRepository.save(new RefreshToken());
-        
-        return newToken;
-    }
-
-    public Optional<RefreshToken> findActiveByHash(String tokenHash) {
-        return refreshTokenRepository.findActiveByHash(new TokenHash(tokenHash))
-                .filter(token -> !token.isRevoked() && !token.getExpiresAt().isExpired());
+        return refreshToken.getUser();
     }
 
     public void revoke(RefreshToken refreshToken) {

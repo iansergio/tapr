@@ -1,27 +1,28 @@
 package com.example.authservice.infrastructure.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.example.authservice.application.port.TokenService;
-import com.example.authservice.domain.user.User;
-import com.example.authservice.infrastructure.config.JwtProperties;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
-import com.example.authservice.domain.refresh.RefreshToken;
-import com.example.authservice.domain.refresh.RefreshTokenRepository;
-import com.example.authservice.domain.refresh.vo.ExpiresAt;
-import com.example.authservice.domain.refresh.vo.TokenHash;
-
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+
+import org.springframework.stereotype.Component;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.example.authservice.application.auth.RefreshTokenService;
+import com.example.authservice.application.port.TokenService;
+import com.example.authservice.domain.refresh.RefreshToken;
+import com.example.authservice.domain.refresh.vo.ExpiresAt;
+import com.example.authservice.domain.refresh.vo.TokenHash;
+import com.example.authservice.domain.user.User;
+import com.example.authservice.infrastructure.config.JwtProperties;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenService implements TokenService {
     private final JwtProperties props;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public TokenPair issue(User user) {
@@ -67,7 +68,7 @@ public class JwtTokenService implements TokenService {
         refreshEntity.setExpiresAt(ExpiresAt.of(refreshExp));
         refreshEntity.setRevoked(false);
         refreshEntity.setUser(user);
-        refreshTokenRepository.save(refreshEntity);
+        refreshTokenService.save(refreshEntity);
 
         return new TokenPair(access, refreshToken, props.getRefresTtlSeconds());
     }

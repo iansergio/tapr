@@ -19,6 +19,11 @@ public class JpaRefreshTokenRepository implements RefreshTokenRepository {
     }
 
     @Override
+    public Optional<RefreshToken> findByUserId(UUID userId) {
+        return jpa.findByUser_Id(userId);
+    }
+
+    @Override
     public RefreshToken save(RefreshToken refreshToken) {
         return jpa.save(refreshToken);
     }
@@ -39,6 +44,7 @@ public class JpaRefreshTokenRepository implements RefreshTokenRepository {
     @Override
     public void deleteById(UUID id) {
         jpa.deleteById(id);
+        jpa.flush();
     }
 
 }

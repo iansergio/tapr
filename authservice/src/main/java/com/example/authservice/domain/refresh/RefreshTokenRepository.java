@@ -11,6 +11,8 @@ public interface RefreshTokenRepository {
 
     Optional<RefreshToken> findActiveByHash(TokenHash tokenHash);
 
+    Optional<RefreshToken> findByUserId(UUID userId);
+
     void revoke(UUID id);
 
     void deleteById(UUID id);

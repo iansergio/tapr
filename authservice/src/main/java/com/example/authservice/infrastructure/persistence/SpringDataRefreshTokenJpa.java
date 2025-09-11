@@ -12,4 +12,7 @@ public interface SpringDataRefreshTokenJpa extends JpaRepository<RefreshToken, U
 
     Optional<RefreshToken> findByTokenHash(TokenHash tokenHash);
 
+    Optional<RefreshToken> findByUser_Id(UUID userId);
+
+    void flush();
 }
