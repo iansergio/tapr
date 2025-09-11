@@ -9,29 +9,33 @@ import java.util.UUID;
 
 public class JpaRefreshTokenRepository implements RefreshTokenRepository {
 
-    private SpringDataRefreshTokenJpa refreshTokenJpa;
+    private SpringDataRefreshTokenJpa jpa;
 
-    public JpaRefreshTokenRepository(SpringDataRefreshTokenJpa refreshTokenJpa) {
-        this.refreshTokenJpa = refreshTokenJpa;
+    public JpaRefreshTokenRepository(SpringDataRefreshTokenJpa jpa) {
+        this.jpa = jpa;
     }
 
     @Override
     public RefreshToken save(RefreshToken refreshToken) {
-        return refreshTokenJpa.save(refreshToken);
+        return jpa.save(refreshToken);
     }
 
     @Override
     public Optional<RefreshToken> findActiveByHash(TokenHash tokenHash) {
-        return refreshTokenJpa.findActiveByTokenHash_Hash(tokenHash.getValue());
+        return jpa.findByTokenHash(tokenHash)
+                .filter(token -> !token.isRevoked() && !token.getExpiresAt().isExpired());
     }
 
     @Override
     public void revoke(UUID id) {
-        refreshTokenJpa.revoke(id);
+        jpa.findById(id).ifPresent(refreshToken -> {
+            refreshToken.setRevoked(true);
+            jpa.save(refreshToken);
+        });
     }
 
     @Override
     public void deleteById(UUID id) {
-        refreshTokenJpa.deleteById(id);
+        jpa.deleteById(id);
     }
 }
