@@ -1,6 +1,7 @@
 package com.example.authservice.interfaces.rest;
 
 import com.example.authservice.application.auth.PasswordLoginHandler;
+import com.example.authservice.domain.user.User;
 import com.example.authservice.interfaces.rest.dto.auth.PasswordLoginRequest;
 import com.example.authservice.interfaces.rest.dto.auth.TokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,4 +26,10 @@ public class AuthController {
         TokenResponse response = passwordLoginHandler.handle(request.email(), request.password());
         return ResponseEntity.ok(response);
     }
+
+    // @Operation(summary = "Endpoint de logout")
+    // @PostMapping("/logout")
+    // public ResponseEntity<Void> logout(User user) {
+
+    // }
 }

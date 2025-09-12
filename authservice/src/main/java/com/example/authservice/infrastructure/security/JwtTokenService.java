@@ -47,6 +47,15 @@ public class JwtTokenService implements TokenService {
                 .withClaim("level", user.getRole().getValue().getLevel())
                 .sign(alg);
 
+        String refreshToken = createRefreshToken(user);
+        return new TokenPair(access, refreshToken, props.getRefresTtlSeconds());
+    }
+
+    public String createRefreshToken(User user) {
+
+        Instant now = Instant.now();
+        Algorithm alg = Algorithm.HMAC256(props.getSecret().getBytes(StandardCharsets.UTF_8));
+
         // Refresh token
         Instant refreshExp = now.plusSeconds(props.getRefresTtlSeconds());
         String refreshToken = JWT.create()
@@ -69,8 +78,8 @@ public class JwtTokenService implements TokenService {
         refreshEntity.setRevoked(false);
         refreshEntity.setUser(user);
         refreshTokenService.save(refreshEntity);
-
-        return new TokenPair(access, refreshToken, props.getRefresTtlSeconds());
+    
+        return refreshToken;
     }
 
     private String hashToken(String token) {
