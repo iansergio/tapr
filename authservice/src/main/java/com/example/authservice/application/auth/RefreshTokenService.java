@@ -8,21 +8,18 @@ import org.springframework.stereotype.Service;
 import com.example.authservice.domain.refresh.RefreshToken;
 import com.example.authservice.domain.refresh.RefreshTokenRepository;
 import com.example.authservice.domain.refresh.vo.TokenHash;
-import com.example.authservice.application.port.TokenService;
-import com.example.authservice.interfaces.rest.dto.auth.TokenResponse;
 
 @Service
 public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
-    private final TokenService tokenService;
-
-    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, TokenService tokenService) {
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.tokenService = tokenService;
     }
-    
-    // Valida, revoga o refresh token antigo e gera novos tokens e retorna o dto.
-    public TokenResponse refreshAndIssueNewTokens(String refreshTokenHash) {
+
+    /**
+     * Valida e revoga o refresh token antigo, retorna o usuário.
+     */
+    public User revokeAndGetUser(String refreshTokenHash) {
         RefreshToken refreshToken = refreshTokenRepository.findActiveByHash(new TokenHash(refreshTokenHash))
                 .filter(token -> !token.isRevoked() && !token.getExpiresAt().isExpired())
                 .orElseThrow(() -> new IllegalArgumentException("Refresh token inválido ou expirado"));
@@ -31,9 +28,7 @@ public class RefreshTokenService {
         refreshToken.setRevoked(true);
         refreshTokenRepository.save(refreshToken);
 
-        // Emite novos tokens
-        TokenService.TokenPair pair = tokenService.issue(refreshToken.getUser());
-        return new TokenResponse(pair.accessToken(), pair.refreshToken(), pair.expiresInSeconds());
+        return refreshToken.getUser();
     }
 
     @Transactional

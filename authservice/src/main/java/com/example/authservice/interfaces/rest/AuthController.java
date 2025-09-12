@@ -1,7 +1,7 @@
 package com.example.authservice.interfaces.rest;
 
 import com.example.authservice.application.auth.PasswordLoginHandler;
-import com.example.authservice.application.auth.RefreshTokenService;
+import com.example.authservice.application.auth.RefreshTokenHandler;
 import com.example.authservice.interfaces.rest.dto.auth.LogoutRequest;
 import com.example.authservice.interfaces.rest.dto.auth.PasswordLoginRequest;
 import com.example.authservice.interfaces.rest.dto.auth.TokenResponse;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final PasswordLoginHandler passwordLoginHandler;
-    private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenHandler refreshTokenHandler;
 
     @Operation(summary = "Login e emissão de tokens")
     @PostMapping("/login/password")
@@ -33,14 +33,14 @@ public class AuthController {
     @Operation(summary = "Refresh de tokens")
     @PostMapping("/refresh")
     public ResponseEntity<TokenResponse> refreshTokens(@Valid @RequestBody RefreshTokenRequest request) {
-        TokenResponse response = refreshTokenService.refreshAndIssueNewTokens(request.refreshToken());
+        TokenResponse response = refreshTokenHandler.handle(request.refreshToken());
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Logout do usuário e revogação do refresh token")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@Valid @RequestBody LogoutRequest request) {
-        refreshTokenService.refreshTokens(request.refreshToken()); // já revoga o token
+        refreshTokenHandler.handle(request.refreshToken()); // revoga e ignora o retorno
         return ResponseEntity.noContent().build();
     }
 
