@@ -49,7 +49,7 @@ public class MagicLink {
     }
 
     public boolean isExpired(Instant now) {
-        return this.expiresAt.isAfter(now);
+        return now.isAfter(this.expiresAt.getValue());
     }
 
     public boolean isConsumed() {
