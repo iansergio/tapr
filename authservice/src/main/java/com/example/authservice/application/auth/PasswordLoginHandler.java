@@ -34,6 +34,7 @@ public class PasswordLoginHandler {
         }
 
         TokenService.TokenPair pair = tokenService.issue(user);
+        System.out.print("cur");
         return new TokenResponse(
                 pair.accessToken(),
                 pair.refreshToken(),
